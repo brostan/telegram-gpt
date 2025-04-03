@@ -9,17 +9,16 @@ class OpenAI {
         SYSTEM: 'system',
     }
 
-    constructor(apiKey) {
-        const configuration = new Configuration({
-            apiKey,
-        })
+    constructor(apiKey, defaultModel = 'gpt-4o') {
+        const configuration = new Configuration({ apiKey })
         this.openai = new OpenAIApi(configuration)
+        this.defaultModel = defaultModel
     }
 
-    async chat(messages) {
+    async chat(messages, model = this.defaultModel) {
         try {
             const response = await this.openai.createChatCompletion({
-                model: 'gpt-4-turbo',
+                model,
                 messages,
             })
             return response.data.choices[0].message
@@ -40,6 +39,5 @@ class OpenAI {
         }
     }
 }
-
 
 export const openai = new OpenAI(config.get('OPENAI_KEY'))
